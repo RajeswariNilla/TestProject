@@ -1,7 +1,7 @@
 pipeline {
   agent any
   environment {
-    WEB_HOST = '23.20.30.30'  // replace
+    WEB_HOST = '23.20.30.30' 
     WEB_USER = 'deploy'
   }
   stages {
