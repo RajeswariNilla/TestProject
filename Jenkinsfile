@@ -7,9 +7,12 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-        git branch: 'main', url: 'https://github.com/RajeswariNilla/TestProject.git', credentialsId: 'github-ssh-creds'
+        withCredentials([string(credentialsId: 'github-pat', variable: 'GIT_TOKEN')]) {
+          git branch: 'main', url: "https://${GIT_TOKEN}@github.com/RajeswariNilla/TestProject.git"
+        }
       }
     }
+
     stage('Build') {
       steps {
         sh 'mvn -B -DskipTests clean package'
@@ -20,6 +23,7 @@ pipeline {
         }
       }
     }
+
     stage('Deploy') {
       steps {
         sshagent (credentials: ['deploy-ssh']) {
