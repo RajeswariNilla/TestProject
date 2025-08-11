@@ -1,8 +1,7 @@
 pipeline {
     agent any
     environment {
-        WEB_HOST = '23.20.30.30' 
-        WEB_USER = 'deploy'
+        APP_DIR = '/var/www/html'       // Adjust this to your httpd web root folder
     }
 
     triggers {
@@ -31,12 +30,14 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sshagent (credentials: ['deploy-ssh']) {
-                    sh '''
-                        scp -o StrictHostKeyChecking=no target/*.war ${WEB_USER}@${WEB_HOST}:/opt/tomcat/webapps/
-                        ssh -o StrictHostKeyChecking=no ${WEB_USER}@${WEB_HOST} "sudo systemctl restart tomcat"
-                    '''
-                }
+                // Copy the built WAR or files to the httpd directory
+                sh '''
+                    sudo cp target/*.war ${APP_DIR}/
+                    # If your app needs to be exploded, you can unzip or copy files accordingly
+                '''
+
+                // Restart httpd service to load the new app
+                sh 'sudo systemctl restart httpd'
             }
         }
     }
