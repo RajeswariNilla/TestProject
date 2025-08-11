@@ -11,7 +11,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                withCredentials([string(credentialsId: 'github-pat', variable: 'GIT_TOKEN')]) {
+                withCredentials([string(credentialsId: 'github-tok', variable: 'GIT_TOKEN')]) {
                     git branch: 'main', url: "https://${GIT_TOKEN}@github.com/RajeswariNilla/TestProject.git"
                 }
             }
